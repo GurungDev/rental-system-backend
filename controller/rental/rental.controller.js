@@ -11,7 +11,6 @@ const addRental = async (req, res) => {
       selected_pick_up_date,
       selected_pick_up_location,
     } = req?.body;
-    console.log(req?.body);
     const userId = req.userId;
     const rentalModel = new RentalModel({
       payment,
@@ -21,7 +20,7 @@ const addRental = async (req, res) => {
       selected_pick_up_location,
     });
     await rentalModel.save(); //saving the data into rental model database
-
+    console.log(userId);
     const newRentalDetails = new RentalDetailsModel({
       rentalId: rentalModel._id,
       userId,
@@ -78,8 +77,15 @@ const getAllRental = async (req, res) => {
 //get listing according to certain conditions
 const getRental = async (req, res) => {
   try {
-    const data = req.body;
-    const rental = await RentalDetailsModel.find(data);
+    const userId = req.userId;
+    const rental = await RentalDetailsModel.find({ userId }).populate([
+      { path: "listingId", select: "name image" },
+      {
+        path: "rentalId",
+        select:
+          "selected_pick_up_location selected_pick_up_date payment duration quantity rentalId",
+      },
+    ]);
     if (!rental) {
       throw new Error("listing not found");
     }

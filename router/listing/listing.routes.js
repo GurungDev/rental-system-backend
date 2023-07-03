@@ -14,7 +14,7 @@ const uploadImage = require("../../middleware/uploadImage");
 const router = express.Router();
 
 router.post("/add", authentication, uploadImage(), addListing);
-router.post("/update", authentication, updateListing);
+router.put("/update", authentication, updateListing);
 router.post("/delete", authentication, deleteListing);
 router.get("/all", getAllListing);
 router.get("/get", getListing);

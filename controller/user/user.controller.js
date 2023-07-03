@@ -74,7 +74,7 @@ const deleteUser = async (req, res) => {
 
 const findById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.userId;
     const user = await UserModel.findById(id);
     if (!user) {
       throw new Error("User not found");
@@ -85,6 +85,19 @@ const findById = async (req, res) => {
   }
 };
 
-const update = (req, res) => {};
+const updateUser = async (req, res) => {
+  try {
+    const data = req.query;
+    const id = req.userId;
+    console.log(data);
+    const user = await UserModel.findByIdAndUpdate(id, data);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
-module.exports = [register, login, findById, findAll, deleteUser, update];
+module.exports = [register, login, updateUser, findById, findAll, deleteUser];

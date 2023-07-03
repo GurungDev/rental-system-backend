@@ -9,11 +9,12 @@ const [
   getAllRental,
   getRental,
 ] = require("../../controller/rental/rental.controller");
+const { rentalPost } = require("../../middleware/requestLimiter");
 const router = express.Router();
 
 router.get("/all", getAllRental);
-router.post("/add", authentication, addRental);
-router.get("/get/:id", getRental);
+router.post("/add", authentication, rentalPost, addRental);
+router.get("/get", authentication, getRental);
 router.post("/update", authentication, updateRental);
 router.post("/delete", authentication, deleteRental);
 

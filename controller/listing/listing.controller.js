@@ -35,7 +35,13 @@ const addListing = async (req, res) => {
 
 const updateListing = async (req, res) => {
   try {
-    console.log("done4");
+    const { _id, data } = req.body;
+
+    const update = await ListingModel.updateOne({ _id }, data);
+    if (!update) {
+      throw new Error("listing was not found");
+    }
+    res.status(200).send("Updated Successfully");
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -54,10 +60,14 @@ const deleteListing = async (req, res) => {
 
 const getAllListing = async (req, res) => {
   try {
-    const listing = await ListingModel.find();
+    const listing = await ListingModel.find(
+      {},
+      { details: 1, image: 1, name: 1 }
+    );
     if (!listing) {
       throw new Error("There are no listing");
     }
+
     res.status(200).send(listing);
   } catch (error) {
     res.status(400).send(error.message);
